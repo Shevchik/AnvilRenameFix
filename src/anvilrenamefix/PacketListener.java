@@ -17,6 +17,10 @@
 
 package anvilrenamefix;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.events.ConnectionSide;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -38,11 +42,11 @@ public class PacketListener {
 	
 	private void initAnvilCustomPacketListener()
 	{
-		pluginInstance.getProtocolManager().addPacketListener(
+		pluginInstance.getProtocolManager().getAsynchronousManager().registerAsyncHandler(
 				  new PacketAdapter(pluginInstance, ConnectionSide.CLIENT_SIDE, 
 				  ListenerPriority.HIGHEST, Packets.Client.CUSTOM_PAYLOAD) {
 					@Override
-				    public void onPacketReceiving(PacketEvent e) {
+				    public void onPacketReceiving(final PacketEvent e) {
 						PacketContainer packet = e.getPacket();
 						//check if it is anvil rename packet
 						if (packet.getStrings().getValues().get(0).equals("MC|ItemName"))
@@ -50,11 +54,26 @@ public class PacketListener {
 							byte[] barray = packet.getByteArrays().getValues().get(0);
 							if (barray != null)
 							{
-								pluginInstance.setDecodedItemStirng(e.getPlayer().getName(), nameDecoder.decodeName(barray));
+								//rename item
+								final String normalName = nameDecoder.decodeName(barray);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(pluginInstance, new Runnable()
+								{
+									public void run()
+									{
+										ItemStack itemtorename = e.getPlayer().getOpenInventory().getTopInventory().getItem(2);
+										//just in case
+										if (itemtorename != null) 
+										{
+											ItemMeta im = itemtorename.getItemMeta();
+											im.setDisplayName(normalName);
+											itemtorename.setItemMeta(im);
+										}
+									}
+								});
 							}
 						}
 					}
-				});
+				}).syncStart();
 	}
 	
 }
