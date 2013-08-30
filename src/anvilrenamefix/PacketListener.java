@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.comphenix.protocol.Packets;
-import com.comphenix.protocol.events.ConnectionSide;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -39,28 +38,33 @@ public class PacketListener {
 		initAnvilCustomPacketListener();
 	}
 	
-	
+
 	private void initAnvilCustomPacketListener()
 	{
 		pluginInstance.getProtocolManager().getAsynchronousManager().registerAsyncHandler(
-				  new PacketAdapter(pluginInstance, ConnectionSide.CLIENT_SIDE, 
-				  ListenerPriority.HIGHEST, Packets.Client.CUSTOM_PAYLOAD) {
+				new PacketAdapter(PacketAdapter
+						.params(pluginInstance, Packets.Client.CUSTOM_PAYLOAD)
+						.clientSide()
+						.listenerPriority(ListenerPriority.HIGHEST)
+						.optionIntercept()
+				)
+				{
 					@Override
 				    public void onPacketReceiving(final PacketEvent e) {
 						PacketContainer packet = e.getPacket();
 						//check if it is anvil rename packet
 						if (packet.getStrings().getValues().get(0).equals("MC|ItemName"))
 						{
-							byte[] barray = packet.getByteArrays().getValues().get(0);
+							final byte[] barray = packet.getByteArrays().getValues().get(0);
 							if (barray != null)
 							{
-								//rename item
-								final String normalName = nameDecoder.decodeName(barray);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(pluginInstance, new Runnable()
 								{
+									final String normalName = nameDecoder.decodeName(barray);
+									final String playername = e.getPlayer().getName();
 									public void run()
 									{
-										ItemStack itemtorename = e.getPlayer().getOpenInventory().getTopInventory().getItem(2);
+										ItemStack itemtorename = Bukkit.getPlayerExact(playername).getOpenInventory().getTopInventory().getItem(2);
 										//just in case
 										if (itemtorename != null) 
 										{
@@ -69,7 +73,7 @@ public class PacketListener {
 											itemtorename.setItemMeta(im);
 										}
 									}
-								});
+								});								
 							}
 						}
 					}
