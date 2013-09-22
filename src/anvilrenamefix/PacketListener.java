@@ -59,7 +59,7 @@ public class PacketListener {
 							}
 						}
 					}
-				}).syncStart();
+				}).start();
 	}
 	
 }
