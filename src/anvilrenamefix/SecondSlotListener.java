@@ -19,11 +19,13 @@ package anvilrenamefix;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
 import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.events.PacketContainer;
 
@@ -35,7 +37,7 @@ public class SecondSlotListener implements Listener {
 		this.pluginInstance = plugin;
 	}
 	
-	@EventHandler
+	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
 	public void onAnvilSecondSlotClick(InventoryClickEvent event)
 	{
 		Inventory inv = event.getInventory();
