@@ -39,6 +39,7 @@ public class AnvilRenameFixPlugin extends JavaPlugin
     nameDecoder = new AnvilNameDecoder();
     protocolManager = ProtocolLibrary.getProtocolManager();
     new PacketListener(this, nameDecoder);
+    getServer().getPluginManager().registerEvents(new SecondSlotListener(this), this);
   }
 
   public void onDisable()
