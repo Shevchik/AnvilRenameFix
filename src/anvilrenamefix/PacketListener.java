@@ -17,10 +17,6 @@
 
 package anvilrenamefix;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -58,22 +54,8 @@ public class PacketListener {
 							final byte[] barray = packet.getByteArrays().getValues().get(0);
 							if (barray != null)
 							{
-								Bukkit.getScheduler().scheduleSyncDelayedTask(pluginInstance, new Runnable()
-								{
-									final String normalName = nameDecoder.decodeName(barray);
-									final String playername = e.getPlayer().getName();
-									public void run()
-									{
-										ItemStack itemtorename = Bukkit.getPlayerExact(playername).getOpenInventory().getTopInventory().getItem(2);
-										//just in case
-										if (itemtorename != null) 
-										{
-											ItemMeta im = itemtorename.getItemMeta();
-											im.setDisplayName(normalName);
-											itemtorename.setItemMeta(im);
-										}
-									}
-								});								
+								final String normalName = nameDecoder.decodeName(barray);
+								packet.getByteArrays().write(0, normalName.getBytes());			
 							}
 						}
 					}
