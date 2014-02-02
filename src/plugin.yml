@@ -1,6 +1,6 @@
 name: AnvilRenameFix
 main: anvilrenamefix.AnvilRenameFixPlugin
-version: 5.0
+version: 6.0
 depend: [ProtocolLib]
 author: _Shevchik_
 load: STARTUP

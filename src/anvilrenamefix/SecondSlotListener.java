@@ -26,7 +26,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.comphenix.protocol.Packets;
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class SecondSlotListener implements Listener {
@@ -49,7 +49,7 @@ public class SecondSlotListener implements Listener {
 			{
 				Player player = (Player) event.getWhoClicked();
 				String name = itemtorename.getItemMeta().getDisplayName();
-				PacketContainer packet = new PacketContainer(Packets.Client.CUSTOM_PAYLOAD);
+				PacketContainer packet = new PacketContainer(PacketType.Play.Client.CUSTOM_PAYLOAD);
 				packet.getStrings().write(0, "MC|ItemName");
 				packet.getIntegers().write(0, name.length());
 				packet.getByteArrays().write(0, name.getBytes());				

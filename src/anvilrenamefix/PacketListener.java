@@ -17,8 +17,7 @@
 
 package anvilrenamefix;
 
-import com.comphenix.protocol.Packets;
-import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -39,10 +38,8 @@ public class PacketListener {
 	{
 		pluginInstance.getProtocolManager().getAsynchronousManager().registerAsyncHandler(
 				new PacketAdapter(PacketAdapter
-						.params(pluginInstance, Packets.Client.CUSTOM_PAYLOAD)
+						.params(pluginInstance, PacketType.Play.Client.CUSTOM_PAYLOAD)
 						.clientSide()
-						.listenerPriority(ListenerPriority.HIGHEST)
-						.optionIntercept()
 				)
 				{
 					@Override
